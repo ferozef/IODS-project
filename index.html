@@ -7,8 +7,10 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Feroze" />
 
 
 <title>IODS course project</title>
@@ -69,9 +71,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -85,30 +85,90 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -118,12 +178,16 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">IODS course project</h1>
+<h4 class="author">Feroze</h4>
 
 </div>
 
 <div id="TOC">
 <ul>
 <li><a href="#about-the-project">About the project</a></li>
+<li><a href="#im-feeling-happy">im feeling <strong>happy!</strong></a></li>
+<li><a href="#here-is-the-link-to-my-git-hub-repository">here is the link to my git hub repository</a></li>
+<li><a href="#httpsgithub.comferozefiods-project"><a href="https://github.com/ferozef/IODS-project" class="uri">https://github.com/ferozef/IODS-project</a></a></li>
 <li><a href="#insert-chapter-2-title-here">Insert chapter 2 title here</a></li>
 </ul>
 </div>
@@ -132,6 +196,16 @@ $(document).ready(function () {
 <div id="about-the-project" class="section level1">
 <h1>About the project</h1>
 <p><em>Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you can use R Markdown syntax.</em></p>
+</div>
+<div id="im-feeling-happy" class="section level1">
+<h1>im feeling <strong>happy!</strong></h1>
+</div>
+<div id="here-is-the-link-to-my-git-hub-repository" class="section level1">
+<h1>here is the link to my git hub repository</h1>
+</div>
+<div id="httpsgithub.comferozefiods-project" class="section level1">
+<h1><a href="https://github.com/ferozef/IODS-project" class="uri">https://github.com/ferozef/IODS-project</a></h1>
+<p>link to the [diary page] (<a href="https://ferozef.github.io/IODS-project/#about-the-project" class="uri">https://ferozef.github.io/IODS-project/#about-the-project</a>)</p>
 <hr />
 </div>
 <div id="insert-chapter-2-title-here" class="section level1">
@@ -162,6 +236,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
