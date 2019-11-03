@@ -1,6 +1,6 @@
 ---
-title: "IODS course project"
-author: "Feroze"
+title: "**IODS course project**"
+author: "**Feroze**!"
 output:
   html_document:
     theme: cosmo

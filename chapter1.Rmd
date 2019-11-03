@@ -6,11 +6,18 @@
 
 im feeling **happy!**
 
+To learn *open data science*
+
+through UEF niversity web page
+
 here is the link to my git hub repository
 
 https://github.com/ferozef/IODS-project
 
 
-link to the [diary page] (https://ferozef.github.io/IODS-project/#about-the-project)
+link to the [diary page] 
+
+
+[link](https://ferozef.github.io/IODS-project/#about-the-project)
 
 [^1]: excited footnote!
