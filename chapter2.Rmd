@@ -1,10 +1,157 @@
-# Insert chapter 2 title here
+
+#Chapter 2: Regression and model validation
+
 
 *Describe the work you have done this week and summarize your learning.*
-# Chapter 2 Data wrangling and data Ananlysis, the Data wrangling exercise create an analysis dataset for the Analysis exercise. During the Analysis exercise will we explore the data, perform analysis and interpret the results.
-
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using.
 
 
+1. Performed linear regression and model validation --> Data wrangling and data Analysis, During Data wrangling exercise I created an analysis dataset for the Analysis exercise. During the Analysis exercise I explored the data, perform analysis and interpret the results.
+
+2. I started with cleaning the data with data wrangling
+3. Next, calculated the bivariabte correlation between the seven variable, based on varaible gender. 
+4. We performed linear regression model, based on the strength of Bivariate relationships between the variable of exam points ( selected as dependent variable), with the remaining five variables. 
+5. Out of three independent variables selected for the model, student attitutde was significantly asscoiated with the exam points variable. This model explain around 20% the variance of the dependent variable (through mutliple R squared value). 
+6. Next I another linear regression was performed with single independent variable of student atiitude and exams points as dependent variable, this model explained the dependent variabale variances of 19% (through multiple R squared).
+7. Upon outliers diagnostics plots, it was revealed that only three variable are classified as outliers.
+***********************************************...............................*******************************************
+
+##completed Chapter 2 : Regression and model validation
+
+getwd()
+
+
+##Feroze_analysis
+##10.11.19
+**1.**  Chapter 2: Regression and model validation--> Data wrangling and data   
+**2.** Ananlysis, the Data wrangling exercise create an analysis dataset for the  
+**3.** Analysis exercise. During the Analysis exercise will we explore the data, 
+**41.** perform analysis and interpret the results.
+
+```{r readdata,echo=TRUE,results='hide',message=FALSE,warning=FALSE}
+setwd("C:/Users/ferozef/Documents/R/Open_data_course/IODS-project")
+library(dplyr)
+learning2019 <- readxl::read_excel("C:/Users/ferozef/Documents/R/Open_data_course/IODS-project/learning2019.xlsx") %>%
+  mutate_at(vars(gender), factor)
+```
+
+## Read the data back to R and check that structure and a few first observations look the same
+
+readtest <- read.xlsx("learning2019.xlsx")
+
+
+head(learning2019)
+head(readtest)
+
+
+#dimensions of the data
+dim(learning2019)
+#166 rows  7 columns
+
+```{r datastructure}
+str(learning2019)
+```
+
+##data.frame:	166 obs. of  7 variables:
+##$ gender  : Factor w/ 2 levels "F","M": 1 2 1 2 2 1 2 1 2 1 ...
+##$ age     : int  53 55 49 53 49 38 50 37 37 42 ...
+##$ attitude: num  3.7 3.1 2.5 3.5 3.7 3.8 3.5 2.9 3.8 2.1 ...
+##$ deep    : num  3.58 2.92 3.5 3.5 3.67 ...
+##$ stra    : num  3.38 2.75 3.62 3.12 3.62 ...
+##$ surf    : num  2.58 3.17 2.25 2.25 2.83 ...
+##$ points  : int  25 12 24 10 22 21 21 31 24 26 ...
+
+
+## Discription of the data
+## Our dataset consists of seven variables, the vraible gender is a categorical (factor) binary variable with two categories of male and female.
+##Our second variable is age which is taken as an integar variable (positive whole number values). 
+##The thrid variable attiude is a numerical variable (continuous variable).
+## Our fourth, fifth and six  variable are deep learning, strategicand surface variable which are again nemarical (continuous)  variable. 
+##Our seventh variable is points which is a positive integar variable.
+
+
+library(ggplot2)
+
+p1 <- ggplot(learning2019, aes(x = attitude, y = stra, col=gender))
+p2 <- p1 + geom_point()
+p2
+
+
+## initialize plot with data and aesthetic mapping
+p1 <- ggplot(learning2019, aes(x = attitude, y = points, col=gender))
+
+## define the visualization type (points)
+p2 <- p1 + geom_point()
+
+## draw the plot
+p2
+## add a regression line
+p3 <- p2 + geom_smooth(method = "lm") + ggtitle("Student's attitude versus exam points")
+p3
+## add a main title and draw the plot
+
+p4 <- ggtitle("Student's attitude versus exam points")
+
+p4
+
+
+##The scatterplot shows regression lines for a linear regression model in which points are the dependant variable (shown on Y -axis), and the student attitudes as the independent variable (shown on x-axis). The regression lines are fitted for both the genders separately. Both the genders show that the student attitude is positively and linearly associated with the points
+
+
+##Exploring data
+```{r fig1, fig.path="figures/"}
+pairs(learning2019[!names(learning2019) %in% c("gender")],col=learning2019$gender)
+```
+
+##this plot shows the scatterplots between the variables agr, attitude, deep, stra, surf, and points in a bivariate relationship, based on both gender's. To further eloborate the relationship in magnitude and direction, I will conduct complex visual analyses to calculate the bivariate correlations between the same variables. 
+
+```{r fig2, fig.path="figures/", fig.dim=c(10,10), results='hide', message=FALSE}
+library(GGally)
+library(ggplot2)
+
+# create a more advanced plot matrix with ggpairs()
+ggpairs(learning2019, 
+        mapping = aes(col = gender, alpha = 0.3), 
+        lower = list(combo = wrap("facethist", bins = 20))
+        )
+```
+## Highest correlation was observed between points and attiutude, (Overall corr: 0,437, Male: 0,451 and Female: 0,422).
+
+##To reconfirm the linear trend between the points and attitude we will use linear regression lm method.
+##Linear regression
+##The highest correlation is between attitude and points, Cor: 0.4365245. Let’s take a closer look.
+```{r}
+qplot(attitude, points, data = learning2019) + geom_smooth(method = "lm")
+```
+## the regression line shows and reconfirm a linear positive relationship between the varaibles attitude and points.
+
+
+##The first linear regression model will be made between points as dependent variable and attitude, stratergic questions and surface learning  as independent variable.
+```{r, results='asis'}
+my_model <- lm(points ~ attitude, data = learning2019)
+results <- summary(my_model)
+
+knitr::kable(results$coefficients, digits=3, caption="Regression coefficients")
+```
+##Resuts: Attitude is significantly associated with points (p=0,03), the other two variables of stragegic and surface learning are not associated with points (p=0,117 stratergic learning and p= 0,466 surface learning)
+
+```{r, results='asis'}
+my_mode_2 <- lm(points ~ attitude, data = learning2019)
+results <- summary(my_model)
+
+knitr::kable(results$coefficients, digits=3, caption="Regression coefficients")
+```
+summary(my_model)
+
+summary(my_model)
+
+
+
+##The multiple R squared values have not chnaged significantly from my model 1 to my model 2 (0.20 to 0.19 respectively) this shows that prioir incluslion of varaiable of strateric learning   and surface learning have a trivial effect on the varaince explained of the dependent variable of points in the linear regression model.
+
+### Diagnostic plots
+```{r fig3, fig.path="figures/"}
+plot(my_model, which=c(1,2,5))
+```
+
+##Normal qplot show that the residuals are normal/linear distributed. The cook distance plot shows no significant otuliers(variables56, 35) in the model.
+##The residuals Vs fitted plot shows three outliers variables 56, 145 and 35.
