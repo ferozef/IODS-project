@@ -13,7 +13,7 @@ output: html_document
 <https://archive.ics.uci.edu/ml/datasets/Student+Performance>
 
 ###Link to Data Wrnagling in R script:  
-
+<https://github.com/ferozef/IODS-project/blob/master/Data_folder/create_alc.R>
 ###Original data and preprocessing  
 
 Original data sets consist of students from Math (1) and Portuguese language (2) classes who answered to several questions to assess their economical, family and activity status, and variables related to studying and alcoholc consumption. In data pre-processing, individual students were identified based on combination of 13 variables and only students present in both datasets were selected.  
@@ -23,7 +23,7 @@ setwd("~/R/IODS-project")
 ### This datase has 35 variables and 382 observation. Out this 35 variables 17 are factors variables, 3 integer , 1 logcial and 14 numeric.
 
 ```{r}
-alc <- read.csv("C:/Users/ferozef/Documents/R/IODS-project/Data_folder/alc.csv")
+alc <- read.csv("C:/Users/ferozef/Documents/R/IODS_project_Feroze/Data_folder/alc.csv")
 head(alc)
 dim(alc)
 str(alc)
@@ -109,6 +109,7 @@ g <- ggplot(alc, aes(x = probability, y = high_use , col = prediction ) )
 
 
 ## tabulate the target variable versus the predictions
+
 table(high_use = alc$high_use, prediction = alc$prediction)%>%prop.table()%>%addmargins()
 
 ##prediction
