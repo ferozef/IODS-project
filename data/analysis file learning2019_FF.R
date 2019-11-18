@@ -3,18 +3,13 @@
 # Chapter 2: Regression and model validation--> Data wrangling and data Ananlysis, the Data wrangling exercise create an analysis dataset for the Analysis exercise. During the Analysis exercise will we explore the data, perform analysis and interpret the results.
 
 
-setwd( "C:/Users/ferozef/Documents/R/IODS-project/)
+setwd("C:/Users/ferozef/Documents/R/Open_data_course/IODS-project)
 
 
 # Read the data back to R and check that structure and a few first observations look the same
 
 readtest <- read.xlsx("learning2019.xlsx")
 
-str(learning2019)
-str(readtest)
-
-head(learning2019)
-head(readtest)
 
 #dimensions of the data
 dim(learning2019)
