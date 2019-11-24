@@ -28,9 +28,9 @@ getwd()
 **41.** perform analysis and interpret the results.
 
 ```{r readdata,echo=TRUE,results='hide',message=FALSE,warning=FALSE}
-setwd("C:/Users/ferozef/Documents/R/IODS_project_Feroze")
+setwd("C:/Users/Javed/Documents/IODS-project")
 library(dplyr)
-learning2019 <- readxl::read_excel("C:/Users/ferozef/Documents/R/IODS_project_Feroze/learning2019.xlsx") %>%
+learning2019 <- readxl::read_excel("C:/Users/Javed/Documents/IODS-project/learning2019.xlsx") %>%
   mutate_at(vars(gender), factor)
 ```
 

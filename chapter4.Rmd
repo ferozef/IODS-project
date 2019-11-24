@@ -1,0 +1,179 @@
+---
+title: "chapter4"
+author: "Feroze"
+date: "11/24/2019"
+output: html_document
+---
+
+#Chapter 4: Classification and clustering
+
+ I will analyze Boston data set available in MASS package. 
+
+ setwd("C:/Users/Javed/Documents/IODS-project")
+###More information on Boston data set:  
+
+<https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html>
+
+##Load Boston data set
+
+Boston data set contains 506 housing observation (rows) with 14 variables (columns).
+
+```{r, message=FALSE}
+library(MASS)
+data('Boston')
+str(Boston)
+summary(Boston)
+```
+
+##Visualize and summarize data
+
+Nice corrplot modification examples <https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html>
+
+```{r, message=FALSE}
+library(corrplot)
+
+correlation <- cor(Boston)
+round(correlation, digits = 2)
+corrplot(correlation, method="circle")
+corrplot(correlation, type = 'upper')
+```
+
+ negative correlation in red and positive correlation in blue. Narrowness of `method = 'circle'` Darkness/weakness of colour indicates how high/low correlation are respectively.  
+
+From the graph it can be observed that most of the variables correlate significantly with other variables. Only few pairs are not significantly correlated.
+
+##Scaling and categorising the variables
+
+
+To classify our data, variable values need to be standarized/scaled so that all variables have a mean value to zero `0´. It is done as follows (when all variables are numerical, as expected for classification analysis):
+
+```{r}
+scaled <- as.data.frame(scale(Boston))
+class(scaled)
+str(scaled)
+summary(scaled)
+```
+`crim` is categorised according to quantiles and later will be used to train the model to predict the right crime rate class of an observation based on other variables.
+
+```{r}
+bins = quantile(scaled$crim)
+crime <- cut(scaled$crim, breaks = bins, label = c('low', 'med_low', 'med_high', 'high'), include.lowest = TRUE)
+#count table for each category level
+table(crime)
+#replace original crim with categorical crime variable
+scaled <- dplyr::select(scaled, -crim)
+scaled <- data.frame(scaled, crime)
+head(scaled)
+```
+##Divide data for training and test sets
+
+To demonstrate, how well my model is predicting crime rate, I will use the cut-off values (20%) proportion of the variable data for testing it, so that 80% of the data belongs to the train set. Observations are selected randomly below for training or test sets.
+
+```{r}
+random_test_rows <- sample(nrow(scaled), size = nrow(scaled) * 0.2)
+test_set <- scaled[random_test_rows, ]
+train_set <- scaled[-random_test_rows, ]
+#Check that resulting dfs are as should
+dim(test_set)
+dim(train_set)
+```
+
+
+
+##Fitting linear discriminant analysis for crimes
+
+I used lda() function for Fitting classification model using crimes as a categorical variable and all other (continuous) variables as predicting variables.
+
+```{r}
+lda_fit <- lda(crime ~ ., data = train_set)
+lda_fit
+```
+LD1 has the highest proportions of variable as its predictors, as evident from the results.
+
+###Visualization of model
+
+
+```{r, message=FALSE, warning=FALSE}
+#Convert crime factor levels to numeric to plot in different colors
+crime_levels <- as.numeric(train_set$crime)
+#I hate the default colors of the plot, so I'm using ggsci package palettes instead
+#Good source for color palettes https://www.datanovia.com/en/blog/top-r-color-palettes-to-know-for-great-data-visualization/
+library(ggsci)
+library(devtools)
+install_github("fawda123/ggord")
+library(ggord)
+cols <- pal_aaas()(4)
+#Plot with nicer colors
+ggord(lda_fit, train_set$crime, poly = FALSE, arrow=.3, veclsz = .5, vec_ext = 4, size=1, cols = cols)
+```
+
+1
+
+##Test model
+
+I created corrected crime classes for the test data and removed crime variable from test data that is used to predict the classes with the `lda_fit`.
+
+```{r}
+#Save correct classes to variable
+correct_classes <- test_set$crime
+#Remove classes from test data
+test_set <- dplyr::select(test_set, -crime)
+#Predict classes with model
+lda_predict <- predict(lda_fit, newdata = test_set)
+#Make 2X2 table to observe model accuracy
+table(correct = correct_classes, predicted = lda_predict$class)
+#Calculate percentage of right predictions on test data
+percent_correct <- 100 * mean(lda_predict$class==correct_classes)
+percent_correct <- round(percent_correct, digits = 0)
+percent_correct
+```
+
+The table shows the actual and predicted categories. The model predicts best the category of highs  - aligned with the graphical observation above. With other categories there are errors, but majority is correct. 
+
+## K-means and distances 
+
+```{r}
+# re-data loading again and standardize it
+data(Boston)
+boston_sc <- scale(Boston)
+# Compute distances (Euclidean is the default)
+dist_eu <- dist(boston_sc)
+dist_man <- dist(boston_sc, method="manhattan")
+summary(dist_eu)
+summary(dist_man)
+```
+
+
+## K-means clustering
+```{r}
+km <- kmeans(boston_sc, centers = 4)
+```
+
+Well that was simple. Let's see what is the best number of clusters with a qplot. 
+ install.packages("ggplot2")
+ library(ggplot2)
+```{r}
+# K-means might produce different results every time, because it randomly assigns the initial cluster centers. The function set.seed() can be used to deal with that.
+set.seed(123)
+# set the max number of clusters
+k_max <- 10
+# count the WCSS = within cluster sum of squares and plot it
+twcss <- sapply(1:k_max, function(k){kmeans(boston_sc, k)$tot.withinss})
+qplot(x = 1:k_max, y = twcss, geom = 'line')
+```
+
+To find the optimal number off clusters I used WCSS method. It tells how close the observations are to the cluster center. From the above graph the optimum number of clusters should be 2 (there is sudden drop from 2, see x-axis). 
+
+### Visualize the clusters
+
+```{r}
+boston_sc <- as.data.frame(boston_sc)
+# run kmeans again with 2 centroids
+km <- kmeans(boston_sc, centers = 2)
+# visualize the clusters
+pairs(boston_sc[5:8], col = km$cluster)
+```
+
+since we used 2 to center our dataset, there are two clusters and the plotted with pairs. From the plot we can see for example, that the houses in the 1st cluster (in red) have
+- lower AGE and lower NOX (nitrogen oxides concentration) 
+- more rooms (RM, average number of rooms per dwelling), and higher distance to employment centers (DIS) 
