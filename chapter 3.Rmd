@@ -4,22 +4,28 @@ output: html_document
 ---
 
 
-#Chapter 3: Logistic regression analysis {.tabset}
+# Chapter 3: Logistic regression analysis {.tabset}
 
 ## we started with data wrangling, and preprocessed the data for down stream analysis. 
 
-###Link to original data:  
+### Link to original data:  
 
 <https://archive.ics.uci.edu/ml/datasets/Student+Performance>
 
+<<<<<<< HEAD
+### Link to Data Wrnagling in R script:  
+<https://github.com/ferozef/IODS-project/blob/master/Data_folder/create_alc.R>
+### Original data and preprocessing  
+=======
 ###Link to Data Wrnagling in R script:  
 <https://github.com/ferozef/IODS-project/blob/master/Data_folder/create_alc.R>
 ###Original data and preprocessing  
+>>>>>>> ac3bb1c19ca02f61c4fc264a74384610b6aa97e4
 
 Original data sets consist of students from Math (1) and Portuguese language (2) classes who answered to several questions to assess their economical, family and activity status, and variables related to studying and alcoholc consumption. In data pre-processing, individual students were identified based on combination of 13 variables and only students present in both datasets were selected.  
 
 Alcohol use was evaluated numerically, separately for weekdays and weekends. To quantify overall consumption, average for these 2 variables was calculated into column `alc_use`. To group students into high and low alcohol use, threshold of 2 was applied to identify students with high alcohol use in a column `high_use`.
-setwd("~/R/IODS-project")
+setwd("~/R/IODS_project_Feroze")
 ### This datase has 35 variables and 382 observation. Out this 35 variables 17 are factors variables, 3 integer , 1 logcial and 14 numeric.
 
 ```{r}
@@ -31,7 +37,7 @@ str(alc)
 
 
 
-##hypothesis prior to analysis
+## hypothesis prior to analysis
 
 We selected Four interesting variables that could predict high alcohol consumption:
 
@@ -51,7 +57,7 @@ my_model_1 <- c('absences', 'failures', 'sex', 'absences', 'high_use')
 
 
 
-##Graphical data exploration & Summary statistics
+## Graphical data exploration & Summary statistics
 
 
 
@@ -70,7 +76,7 @@ summary(my_model_1)
 ##out the four predicted variables, 3 variables failures,absences, and sexM showed a positive significant association with a outcome variable.
 
 
-##predict() the probability of high_use
+## predict() the probability of high_use
 probabilities <- predict(my_model_1, type = "response")
 
 ##add the predicted probabilities to 'alc'
@@ -108,7 +114,14 @@ g <- ggplot(alc, aes(x = probability, y = high_use , col = prediction ) )
 
 
 
+<<<<<<< HEAD
+### tabulate the target variable versus the predictions
+=======
 ## tabulate the target variable versus the predictions
+<<<<<<< HEAD
+>>>>>>> ac3bb1c19ca02f61c4fc264a74384610b6aa97e4
+=======
+>>>>>>> ac3bb1c19ca02f61c4fc264a74384610b6aa97e4
 
 table(high_use = alc$high_use, prediction = alc$prediction)%>%prop.table()%>%addmargins()
 
@@ -178,7 +191,7 @@ cbind(OR, CI)
 ```
 
 
-###Summary statistics by group
+### Summary statistics by group
 Question 6. 2x2 cross tabulation of predictions versus the actual values 
 ```{r}
 alc%>% group_by(sex) %>% summarise(count = n(), mean_absences = mean(absences), mean_failures = mean(failures))
@@ -187,7 +200,7 @@ alc%>% group_by(sex) %>% summarise(count = n(), mean_absences = mean(absences), 
     
     
     
-###Performing 10-fold cross-validation on my_model_1
+### Performing 10-fold cross-validation on my_model_1
 ```{r}
 ## define a loss function (average prediction error)
 loss_func <- function(class, prob) {
