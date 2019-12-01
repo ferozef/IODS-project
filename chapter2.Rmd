@@ -1,5 +1,6 @@
 
-#Chapter 2: Regression and model validation
+# Chapter 2: Regression and model validation {.tabset}
+
 
 
 *Describe the work you have done this week and summarize your learning.*
@@ -15,26 +16,27 @@
 7. Upon outliers diagnostics plots, it was revealed that only three variable are classified as outliers.
 ***********************************************...............................*******************************************
 
-##completed Chapter 2 : Regression and model validation
+## completed Chapter 2 : Regression and model validation
 
 getwd()
 
 
-##Feroze_analysis
-##10.11.19
+#Feroze_analysis
+#10.11.19
 **1.**  Chapter 2: Regression and model validation--> Data wrangling and data   
 **2.** Ananlysis, the Data wrangling exercise create an analysis dataset for the  
 **3.** Analysis exercise. During the Analysis exercise will we explore the data, 
 **41.** perform analysis and interpret the results.
 
 ```{r readdata,echo=TRUE,results='hide',message=FALSE,warning=FALSE}
-setwd("C:/Users/Javed/Documents/IODS-project")
+setwd("C:/Users/Fariah/Documents/IODS-project")
 library(dplyr)
-learning2019 <- readxl::read_excel("C:/Users/Javed/Documents/IODS-project/learning2019.xlsx") %>%
+learning2019 <- readxl::read_excel("C:/Users/Fariah/Documents/IODS-project/learning2019.xlsx") %>%
   mutate_at(vars(gender), factor)
 ```
 
 ## Read the data back to R and check that structure and a few first observations look the same
+library(readxl)
 
 readtest <- read.xlsx("learning2019.xlsx")
 
@@ -97,7 +99,7 @@ p4
 ##The scatterplot shows regression lines for a linear regression model in which points are the dependant variable (shown on Y -axis), and the student attitudes as the independent variable (shown on x-axis). The regression lines are fitted for both the genders separately. Both the genders show that the student attitude is positively and linearly associated with the points
 
 
-##Exploring data
+## Exploring data
 ```{r fig1, fig.path="figures/"}
 pairs(learning2019[!names(learning2019) %in% c("gender")],col=learning2019$gender)
 ```
@@ -114,7 +116,7 @@ ggpairs(learning2019,
         lower = list(combo = wrap("facethist", bins = 20))
         )
 ```
-## Highest correlation was observed between points and attiutude, (Overall corr: 0,437, Male: 0,451 and Female: 0,422).
+##Highest correlation was observed between points and attiutude, (Overall corr: 0,437, Male: 0,451 and Female: 0,422).
 
 ##To reconfirm the linear trend between the points and attitude we will use linear regression lm method.
 ##Linear regression
@@ -122,7 +124,7 @@ ggpairs(learning2019,
 ```{r}
 qplot(attitude, points, data = learning2019) + geom_smooth(method = "lm")
 ```
-## the regression line shows and reconfirm a linear positive relationship between the varaibles attitude and points.
+##the regression line shows and reconfirm a linear positive relationship between the varaibles attitude and points.
 
 
 ##The first linear regression model will be made between points as dependent variable and attitude, stratergic questions and surface learning  as independent variable.
@@ -148,7 +150,7 @@ summary(my_model)
 
 ##The multiple R squared values have not chnaged significantly from my model 1 to my model 2 (0.20 to 0.19 respectively) this shows that prioir incluslion of varaiable of strateric learning   and surface learning have a trivial effect on the varaince explained of the dependent variable of points in the linear regression model.
 
-### Diagnostic plots
+## Diagnostic plots
 ```{r fig3, fig.path="figures/"}
 plot(my_model, which=c(1,2,5))
 ```

@@ -1,5 +1,6 @@
 
-# About the project
+# Chapter 1: About the project {.tabset}
+
 
 *Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you can use R Markdown syntax.*
 
@@ -10,12 +11,12 @@ To learn *open data science*
 
 through UEF niversity web page
 
-here is the link to my git hub repository
+## link to my git hub repository
 
 https://github.com/ferozef/IODS-project
 
 
-link to the [diary page] 
+## link to the [diary page] 
 
 
 [link](https://ferozef.github.io/IODS-project/#about-the-project)
