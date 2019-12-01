@@ -5,11 +5,12 @@ date: "11/24/2019"
 output: html_document
 ---
 
-#Chapter 4: Classification and clustering
+# Chapter 4: Classification and clustering {.tabset}
+
 
  I will analyze Boston data set available in MASS package. 
 
- setwd("C:/Users/Javed/Documents/IODS-project")
+setwd("C:/Users/ferozef/Documents/R/IODS-project")
 ###More information on Boston data set:  
 
 <https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html>
@@ -25,7 +26,7 @@ str(Boston)
 summary(Boston)
 ```
 
-##Visualize and summarize data
+## Visualize and summarize data
 
 Nice corrplot modification examples <https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html>
 
@@ -42,7 +43,7 @@ corrplot(correlation, type = 'upper')
 
 From the graph it can be observed that most of the variables correlate significantly with other variables. Only few pairs are not significantly correlated.
 
-##Scaling and categorising the variables
+## Scaling and categorising the variables
 
 
 To classify our data, variable values need to be standarized/scaled so that all variables have a mean value to zero `0´. It is done as follows (when all variables are numerical, as expected for classification analysis):
@@ -65,7 +66,7 @@ scaled <- dplyr::select(scaled, -crim)
 scaled <- data.frame(scaled, crime)
 head(scaled)
 ```
-##Divide data for training and test sets
+## Divide data for training and test sets
 
 To demonstrate, how well my model is predicting crime rate, I will use the cut-off values (20%) proportion of the variable data for testing it, so that 80% of the data belongs to the train set. Observations are selected randomly below for training or test sets.
 
@@ -80,7 +81,7 @@ dim(train_set)
 
 
 
-##Fitting linear discriminant analysis for crimes
+## Fitting linear discriminant analysis for crimes
 
 I used lda() function for Fitting classification model using crimes as a categorical variable and all other (continuous) variables as predicting variables.
 
@@ -90,7 +91,7 @@ lda_fit
 ```
 LD1 has the highest proportions of variable as its predictors, as evident from the results.
 
-###Visualization of model
+## Visualization of model
 
 
 ```{r, message=FALSE, warning=FALSE}
@@ -107,9 +108,9 @@ cols <- pal_aaas()(4)
 ggord(lda_fit, train_set$crime, poly = FALSE, arrow=.3, veclsz = .5, vec_ext = 4, size=1, cols = cols)
 ```
 
-1
 
-##Test model
+
+## Test model
 
 I created corrected crime classes for the test data and removed crime variable from test data that is used to predict the classes with the `lda_fit`.
 
@@ -150,7 +151,6 @@ km <- kmeans(boston_sc, centers = 4)
 ```
 
 Well that was simple. Let's see what is the best number of clusters with a qplot. 
- install.packages("ggplot2")
  library(ggplot2)
 ```{r}
 # K-means might produce different results every time, because it randomly assigns the initial cluster centers. The function set.seed() can be used to deal with that.
@@ -162,9 +162,12 @@ twcss <- sapply(1:k_max, function(k){kmeans(boston_sc, k)$tot.withinss})
 qplot(x = 1:k_max, y = twcss, geom = 'line')
 ```
 
+
+
+
 To find the optimal number off clusters I used WCSS method. It tells how close the observations are to the cluster center. From the above graph the optimum number of clusters should be 2 (there is sudden drop from 2, see x-axis). 
 
-### Visualize the clusters
+## Visualize the clusters
 
 ```{r}
 boston_sc <- as.data.frame(boston_sc)
