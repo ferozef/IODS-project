@@ -26,17 +26,14 @@ Original data sets consist of students from Math (1) and Portuguese language (2)
 
 Alcohol use was evaluated numerically, separately for weekdays and weekends. To quantify overall consumption, average for these 2 variables was calculated into column `alc_use`. To group students into high and low alcohol use, threshold of 2 was applied to identify students with high alcohol use in a column `high_use`.
 
-setwd("C:/Users/Fariah/Documents/IODS-project")
 ### This datase has 35 variables and 382 observation. Out this 35 variables 17 are factors variables, 3 integer , 1 logcial and 14 numeric.
 
 ```{r}
+
 alc <- read.csv("C:/Users/ferozef/Documents/R/IODS-project/Data_folder/alc.csv")
 
 
 ### This datase has 35 variables and 382 observation. Out this 35 variables 17 are factors variables, 3 integer , 1 logcial and 14 numeric.
-
-```{r}
-alc <- read.csv("C:/Users/ferozef/Documents/R/IODS-project/Data_folder/alc.csv")
 
 head(alc)
 dim(alc)

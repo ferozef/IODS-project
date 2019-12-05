@@ -10,7 +10,11 @@ output: html_document
 
  I will analyze Boston data set available in MASS package. 
 
+
 setwd("C:/Users/ferozef/Documents/R/IODS-project")
+
+ setwd("C:/Users/Fariah/Documents/IODS-project")
+
 ###More information on Boston data set:  
 
 <https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html>
