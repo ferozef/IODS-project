@@ -65,11 +65,11 @@ str(learning2019)
 ##$ points  : int  25 12 24 10 22 21 21 31 24 26 ...
 
 
-## Discription of the data
-## Our dataset consists of seven variables, the vraible gender is a categorical (factor) binary variable with two categories of male and female.
+##Discription of the data
+##Our dataset consists of seven variables, the vraible gender is a categorical (factor) binary variable with two categories of male and female.
 ##Our second variable is age which is taken as an integar variable (positive whole number values). 
 ##The thrid variable attiude is a numerical variable (continuous variable).
-## Our fourth, fifth and six  variable are deep learning, strategicand surface variable which are again nemarical (continuous)  variable. 
+##Our fourth, fifth and six  variable are deep learning, strategicand surface variable which are again nemarical (continuous)  variable. 
 ##Our seventh variable is points which is a positive integar variable.
 
 
@@ -80,18 +80,18 @@ p2 <- p1 + geom_point()
 p2
 
 
-## initialize plot with data and aesthetic mapping
+##initialize plot with data and aesthetic mapping
 p1 <- ggplot(learning2019, aes(x = attitude, y = points, col=gender))
 
-## define the visualization type (points)
+##define the visualization type (points)
 p2 <- p1 + geom_point()
 
-## draw the plot
+##draw the plot
 p2
-## add a regression line
+##add a regression line
 p3 <- p2 + geom_smooth(method = "lm") + ggtitle("Student's attitude versus exam points")
 p3
-## add a main title and draw the plot
+##add a main title and draw the plot
 
 p4 <- ggtitle("Student's attitude versus exam points")
 
@@ -136,7 +136,8 @@ results <- summary(my_model)
 
 knitr::kable(results$coefficients, digits=3, caption="Regression coefficients")
 ```
-##Resuts: Attitude is significantly associated with points (p=0,03), the other two variables of stragegic and surface learning are not associated with points (p=0,117 stratergic learning and p= 0,466 surface learning)
+## Results
+Attitude is significantly associated with points (p=0,03), the other two variables of stragegic and surface learning are not associated with points (p=0,117 stratergic learning and p= 0,466 surface learning)
 
 ```{r, results='asis'}
 my_mode_2 <- lm(points ~ attitude, data = learning2019)
