@@ -1,0 +1,207 @@
+---
+title: "chapter6"
+author: "Feroze"
+date: "8 12 2019"
+output: html_document
+---
+
+# 6 Longtitudinal data {.tabset}
+
+this week exercises is based on the Chapters 8 and 9 of Vehkalahti and Everitt (2019), included in the special edition MABS4IODS (Part VI) we work with two dataset, BPRS and RATS, and perform the analyses based on swapping method.
+
+## first dataset RATS
+
+This dataset RATS has 16 rats for study, and they are divided into 3 groups based on different diets.
+
+```{r}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+RATSL <- read.csv(file = "C:/Users/ferozef/Documents/R/IODS-project/data/RATSL.csv", row.names = 1)
+
+# categorials into factors
+RATSL$Group <- factor(RATSL$Group)
+RATSL$ID <- factor(RATSL$ID)
+# stardardize bprsl
+RATSL <- RATSL %>% group_by(Time) %>% mutate(stweight = (Weight - mean(Weight)) / sd(Weight)) %>% ungroup()
+str(RATSL)
+```
+
+## Graphical exploration of longtitudinal data
+
+```{r}
+# plot the individuals in time with standardized bprs value 
+ggplot(RATSL, aes(x = Time, y = Weight, linetype = ID)) + geom_line() + facet_grid(. ~ Group, labeller = label_both) + scale_linetype_manual(values = rep(1:6, times=4)) + theme(legend.position = "none") +   scale_y_continuous(limits = c(min(RATSL$Weight), max(RATSL$Weight)))
+```
+
+The diet has influenced the rats wieght and all the rats has shown to gain weight. Comparing all the 3 group, Group1 rats are at the baseline whereas, Group 2 and 3 has higher weight and variability compared to Group1
+
+```{r}
+# Summary plot
+# Number of timepoints, baseline included
+n <- RATSL$Time %>% unique() %>% length()
+# Summarize mean and std error
+rats_sum <- RATSL %>% group_by(Group, Time) %>% summarise(mean = mean(Weight), se = ( sd(Weight) / sqrt(n) )) %>% ungroup()
+glimpse(rats_sum)
+# plot the plots
+par(mfrow = c(1,2))
+# with means only
+ggplot(rats_sum, aes(x = Time, y = mean, linetype = Group, shape = Group)) +
+  geom_line() +
+  scale_linetype_manual(values = c(1,2,3)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1,2,3)) +
+  theme(legend.position = c(0.9,0.5)) +
+  scale_y_continuous(name = "mean(Weight) +/- se(Weight)")
+# added with the error bar
+ggplot(rats_sum, aes(x = Time, y = mean, linetype = Group, shape = Group)) +
+  geom_line() +
+  scale_linetype_manual(values = c(1,2,3)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1,2,3)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se, linetype="1"), width=0.3) +
+  theme(legend.position = c(0.9,0.5)) +
+  scale_y_continuous(name = "mean(Weight) +/- se(Weight)")
+```
+from the above graph, we can conclude that all the 3 groups weight increase by time. 
+
+
+```{r}
+# boxplot
+ggplot(RATSL, aes(x = factor(Time), y = Weight, fill = Group)) + geom_boxplot()
+ ```
+
+Boxplots with non-summarized data.
+
+## Preparinf the summary measure approach
+
+```{r}
+# Summary measure approach, filter out outliers
+# create the summary dataset with means from the weeks 1-8
+rat8s <- RATSL %>%
+  filter(Time > 0) %>%
+  group_by(Group, ID) %>%
+  summarise( mean=mean(Weight) ) %>%
+  ungroup()
+glimpse(rat8s)
+ggplot(rat8s, aes(x=Group, y = mean)) + geom_boxplot() + stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white")
+```
+From the above boxplot, we can clearly see the outliers present in the group, let's filter out the outliers from the data.
+
+```{r}
+# filtering out the outlier's and re-plotting the box plot again
+
+rat8s1 <- filter(rat8s, Group == 2 & mean < 550 | Group == 1 & mean > 260 | Group == 3 & mean > 500)
+glimpse(rat8s1)
+ggplot(rat8s1, aes(x=Group, y = mean)) + geom_boxplot() + stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white")
+```
+From the above box plot 2, we can see that the outlier's has been filtered out and the data now seems to be good. 
+
+
+
+## Summary approach, comparing means
+
+```{r}
+summary(aov(mean ~ Group, data = rat8s1))
+```
+
+T-test to the summary data without the outliers, shows no difference between the groups (p=.60, conf.interval includes zero).
+
+
+```{r}
+kruskal.test(mean ~ Group, data = rat8s1)
+```
+
+The differences between the group are statistically significant with p-value = 0.007119 according to both tests.
+
+```{r}
+# covariance analysis with the baseline
+# add the baseline from the original wide dataset to the summary data
+rats <- read.csv(file = "C:/Users/ferozef/Documents/R/IODS-project/data/RATS.csv", row.names = 1)
+rat8s2 <- rat8s %>% mutate(baseline = rats$WD1)
+glimpse(rat8s2)
+# Fittinf linear regression model
+fit <- lm(mean ~ baseline + Group, data = rat8s2)
+summary(fit)
+```
+
+The covariance analysis reveals, that the baseline is highly related to the means with 5.02e-08 ***.
+And, after controlling the baseline, there is no significant diffence left between the group means.
+
+## BPRS
+
+Do the growth profiles of the treatment groups differ?
+
+```{r}
+# read the data, in long form 
+bprsl <- read.csv(file = "C:/Users/ferozef/Documents/R/IODS-project/data/BPRSL.csv", row.names = 1)
+bprsl$treatment <- factor(bprsl$treatment)
+bprsl$subject <- factor(bprsl$subject)
+glimpse(bprsl)
+```
+
+```{r}
+ggplot(bprsl, aes(x = weeks, y = bprs, group = subject)) + geom_line() + facet_grid(. ~ treatment, labeller = label_both) 
+```
+We have the individuals, all with bprs points decreasing in time, some more than others.
+
+
+```{r}
+bps_reg <- lm(bprs ~ weeks + treatment, data=bprsl)
+summary(bps_reg)
+```
+
+
+### Random intercept model
+```{r}
+library(lme4)
+bps_ref <- lmer(bprs ~ weeks + treatment + (1|subject), data = bprsl, REML=FALSE)
+summary(bps_ref)
+```
+
+Note that in this model the within-subject dependencies are ignored. See std.dev of subject.
+
+### Random intercept and random slope model 
+
+```{r}
+bps_ref2 <- lmer(bprs ~ weeks + treatment + (weeks|subject), data = bprsl, REML=FALSE)
+summary(bps_ref2)
+```
+
+```{r}
+anova(bps_ref, bps_ref2)
+```
+
+The model fit is better in model 2.
+
+### Random intercept and random slope model with interaction
+
+```{r}
+bps_ref3 <- lmer(bprs ~ weeks * treatment + (weeks|subject), data = bprsl, REML=FALSE)
+summary(bps_ref3)
+```
+
+The estimated regression parameters for the interaction  indicate that the bprs decrease slopes are somewhat higher for individuals in treatment group 2 than in group 1. 
+
+
+```{r}
+anova(bps_ref2, bps_ref3)
+```
+
+The fit is not significantly better in model 3.
+
+
+```{r}
+# Create a vector of the fitted values
+Fitted <- fitted(bps_ref2)
+bprsl <- bprsl %>% mutate(Fitted)
+# draw the plot of BPRSL with the observed bprs values
+p1 <- ggplot(bprsl, aes(x = weeks, y = bprs, group = subject)) + geom_line() + facet_grid(. ~ treatment, labeller = label_both) + scale_x_continuous(name = "Time (weeks)", breaks = seq(0, 8, 1)) +  ylim(0,100) + theme(legend.position = "top") + ggtitle("Observed")
+# draw the plot with fitted
+p2 <- ggplot(bprsl, aes(x = weeks, y = Fitted, group = subject)) +
+  geom_line() + facet_grid(. ~ treatment, labeller = label_both) +
+  scale_x_continuous(name = "Time (weeks)", breaks = seq(0, 8, 1)) +
+  ylim(0, 100) +
+  theme(legend.position = "top") + ggtitle("Fitted")
+p1; p2
+```
