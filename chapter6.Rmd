@@ -5,7 +5,7 @@ date: "8 12 2019"
 output: html_document
 ---
 
-# 6 Longtitudinal data {.tabset}
+# Chapter 6: Longtitudinal data {.tabset}
 
 this week exercises is based on the Chapters 8 and 9 of Vehkalahti and Everitt (2019), included in the special edition MABS4IODS (Part VI) we work with two dataset, BPRS and RATS, and perform the analyses based on swapping method.
 

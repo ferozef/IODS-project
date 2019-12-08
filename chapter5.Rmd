@@ -5,7 +5,7 @@ date: "1 12 2019"
 output: html_document
 ---
 
-# chapter 5: Dimensionality reduction techniques {.tabset}
+# Chapter 5: Dimensionality reduction techniques {.tabset}
 
 
 we are continuing with chapter 4 the "human" dataset and do further analysis. From the previous exercises we know that this data includes human development indicators (columns) from countries (rows).
